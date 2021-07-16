@@ -95,14 +95,17 @@ def personas():
         # Alumno:
         # Implementar la captura de limit y offset de los argumentos
         # de la URL
-        # limit = ...
-        # offset = ....
+        limit_str = str(request.args.get('limit'))
+        offset_str = str(request.args.get('offset'))
 
         # Debe verificar si el limit y offset son válidos cuando
         # no son especificados en la URL
-
         limit = 0
         offset = 0
+        if (limit_str is not None) and ( limit_str.isdigit()):
+            limit = int(limit_str)
+        if (offset_str is not None) and (limit_str.isdigit()):
+            offset = int(offset_str)
 
         result = persona.report(limit=limit, offset=offset)
         return jsonify(result)
@@ -114,14 +117,20 @@ def personas():
 def comparativa():
     try:
         # Alumno:
-        result = '''<h3>Implementar una función en persona.py
-                    nationality_review</h3>'''
-        result += '''<h3>El eje "X" del gráfico debe ser los IDs
-                    de las personas y el eje "Y" deben ser sus
-                    respectivas edades</h3>'''
-        result += '''<h3>Esa funcion debe devolver los datos que necesite
-                    para implementar el grafico a mostrar</h3>'''
-        return (result)
+
+        x, y = persona.nationality_review()
+
+        fig, ax = plt.subplots(figsize=(16, 9))
+        ax.plot(x, y)
+        ax.set_ylabel("Edad")
+        ax.set_xlabel("ID")
+
+        
+        output = io.BytesIO()
+        FigureCanvas(fig).print_png(output)
+        plt.close(fig)  # Cerramos la imagen para que no consuma memoria del sistema
+        return Response(output.getvalue(), mimetype='image/png')
+
     except:
         return jsonify({'trace': traceback.format_exc()})
 
@@ -132,11 +141,12 @@ def registro():
         try:
             # Alumno:
             # Obtener del HTTP POST JSON el nombre y los pulsos
-            # name = ...
-            # age = ...
-            # nationality = ...
+            name = str(request.form.get('name'))
+            age = str(request.form.get('age'))
+            nationality = str(request.form.get('nationality'))
 
-            # persona.insert(name, int(age), nationality)
+
+            persona.insert(name, int(age), nationality)
             return Response(status=200)
         except:
             return jsonify({'trace': traceback.format_exc()})

@@ -17,7 +17,7 @@ __version__ = "1.2"
 import sqlalchemy
 from sqlalchemy import Column, Integer, String, ForeignKey, DateTime
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker, relationship
+from sqlalchemy.orm import query, sessionmaker, relationship
 from sqlalchemy import func
 
 from flask_sqlalchemy import SQLAlchemy
@@ -71,3 +71,14 @@ def report(limit=0, offset=0):
         json_result_list.append(json_result)
 
     return json_result_list
+
+def nationality_review():
+
+    query = db.session.query(Persona)
+    
+    
+    x = [x.id for x in query]
+    y =[x.age for x in query]
+
+
+    return x,y
