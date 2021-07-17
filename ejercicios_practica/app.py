@@ -104,7 +104,7 @@ def personas():
         offset = 0
         if (limit_str is not None) and ( limit_str.isdigit()):
             limit = int(limit_str)
-        if (offset_str is not None) and (limit_str.isdigit()):
+        if (offset_str is not None) and (offset_str.isdigit()):
             offset = int(offset_str)
 
         result = persona.report(limit=limit, offset=offset)
